@@ -15,7 +15,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236E2BFF'/%3E%3Cstop offset='1' stop-color='%23FF2E9A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230B0B12'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial' font-weight='700' text-anchor='middle' fill='url(%23g)'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -199,7 +199,7 @@
   <div class="container">
     <div class="about-wrap">
       <div class="about-visual reveal">
-        <span class="about-visual-monogram">ME</span>
+        <img src="assets/images/profile.png" alt="Mahmoud Elshorbagy" class="about-photo" loading="lazy">
       </div>
       <div class="about-text reveal">
         <div class="eyebrow">
@@ -207,14 +207,16 @@
           <span data-i18n="ar">نبذة عني</span>
         </div>
         <div data-i18n="en">
-          <p>I'm Mahmoud Elshorbagy, an AI Visual Producer specializing in CGI product commercials and AI-generated video advertising.</p>
-          <p>I work at the intersection of creative direction and generative technology — using tools like Kling, Veo, Seedance, and Higgsfield to craft visuals that used to take studios weeks, in a fraction of the time.</p>
-          <p>My clients span beauty, fashion, food & beverage, and consumer goods — brands that need premium visual storytelling without the overhead of traditional production. Every project starts with a story, not a tool — AI is simply how I tell it faster.</p>
+          <p>I'm Mahmoud Elshorbagy — an AI Visual Producer.</p>
+          <p>I believe every brand has a story worth stopping for. My job is to turn that story into visuals people can't scroll past — CGI product commercials and AI-crafted campaigns designed to grab the eye and stay in the mind.</p>
+          <p>If you want your brand to stand out — an ad that turns heads, a visual identity people remember — you're in the right place.</p>
+          <p>What are you waiting for? Reach out, and let's build your success together. I'm not just a producer — I'm a partner in your growth.</p>
         </div>
         <div data-i18n="ar">
-          <p>أنا محمود الشوربجي، منتج مرئي متخصص في الذكاء الاصطناعي، أعمل في إنتاج إعلانات CGI ثلاثية الأبعاد للمنتجات وصناعة إعلانات الفيديو المولّدة بالذكاء الاصطناعي.</p>
-          <p>أجمع بين الإخراج الإبداعي والتقنيات التوليدية الحديثة، باستخدام أدوات مثل Kling وVeo وSeedance وHiggsfield، لإنتاج مرئيات كانت تستغرق أسابيع في الاستوديوهات التقليدية، خلال وقت أقصر بكثير.</p>
-          <p>أعمل مع علامات تجارية في مجالات التجميل والأزياء والأغذية والمشروبات والمنتجات الاستهلاكية، تبحث عن سرد بصري احترافي دون تكاليف الإنتاج التقليدي. كل مشروع يبدأ بفكرة وقصة، والذكاء الاصطناعي هو فقط الأداة التي أرويها بها بشكل أسرع.</p>
+          <p>أنا محمود الشوربجي — AI Visual Producer.</p>
+          <p>مؤمن إن كل براند عنده قصة تستاهل الناس توقف عندها. شغلي إني أحوّل القصة دي لصورة محدش يقدر يعدّيها — إعلانات CGI وحملات بصرية مصممة تخطف العين وتثبت في الذاكرة.</p>
+          <p>لو عاوز تميّز براندك — إعلان يلفت الأنظار، وهوية بصرية الناس تفتكرها — أنت في المكان الصح.</p>
+          <p>مستني إيه؟ ابعتلي، وخلينا نبني نجاحك مع بعض. أنا مش مجرد منفّذ — أنا شريك في نموّك.</p>
         </div>
 
         <div class="about-stats">
@@ -309,7 +311,7 @@
     <button class="lightbox-close" aria-label="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
-    <video id="lightbox-video" controls playsinline></video>
+    <video id="lightbox-video" controls playsinline controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false"></video>
     <div class="lightbox-caption" id="lightbox-caption">
       <div class="work-card-title"><span data-i18n="en"></span><span data-i18n="ar"></span></div>
     </div>
@@ -322,6 +324,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/lang.js"></script>
+<script src="js/cursor-glow.js"></script>
 
 <script type="importmap">
 {

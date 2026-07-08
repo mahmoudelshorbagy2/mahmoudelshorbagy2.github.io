@@ -120,6 +120,18 @@ if (lightbox) {
 }
 
 /* ==========================================================================
+   Video download / right-click protection
+   ========================================================================== */
+
+document.addEventListener('contextmenu', (e) => {
+  if (e.target.closest('video')) e.preventDefault();
+});
+
+document.addEventListener('dragstart', (e) => {
+  if (e.target.closest('video')) e.preventDefault();
+});
+
+/* ==========================================================================
    Footer year
    ========================================================================== */
 
