@@ -3,11 +3,15 @@
   const html = document.documentElement;
 
   function apply(lang) {
+    const changed = html.getAttribute('lang') !== lang;
     html.setAttribute('lang', lang);
     html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
     document.querySelectorAll('.lang-toggle-label').forEach((el) => {
       el.textContent = lang === 'ar' ? 'EN' : 'AR';
     });
+    if (changed) {
+      document.dispatchEvent(new CustomEvent('site-lang-change', { detail: { lang } }));
+    }
   }
 
   function getSavedLang() {

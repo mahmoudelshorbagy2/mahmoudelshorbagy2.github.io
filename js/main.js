@@ -54,12 +54,9 @@ renderMarquee();
    Work grid + Lightbox
    ========================================================================== */
 
-function renderWork() {
-  const grid = document.getElementById('work-grid');
-  if (!grid || typeof SHOWREEL === 'undefined') return;
-
-  grid.innerHTML = SHOWREEL.map((v, i) => `
-    <div class="work-card reveal" data-index="${i}" tabindex="0" role="button" aria-label="${v.titleEn}">
+function cardMarkup(v, i) {
+  return `
+    <div class="work-card" data-index="${i}" tabindex="0" role="button" aria-label="${v.titleEn}">
       <img src="assets/images/posters/${v.file}.jpg" alt="${v.titleEn}" loading="lazy">
       <div class="work-card-play">
         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -73,9 +70,32 @@ function renderWork() {
         </div>
       </div>
     </div>
-  `).join('');
+  `;
+}
 
-  grid.querySelectorAll('.work-card').forEach((card) => {
+const MARQUEE_COLUMNS = 3;
+const MARQUEE_DURATIONS = [34, 42, 38];
+
+function renderWork() {
+  const wrap = document.getElementById('work-grid');
+  if (!wrap || typeof SHOWREEL === 'undefined') return;
+
+  const columns = Array.from({ length: MARQUEE_COLUMNS }, () => []);
+  SHOWREEL.forEach((v, i) => {
+    columns[i % MARQUEE_COLUMNS].push({ ...v, index: i });
+  });
+
+  wrap.innerHTML = columns.map((col, colIndex) => {
+    const duration = MARQUEE_DURATIONS[colIndex % MARQUEE_DURATIONS.length];
+    const track = col.concat(col).map((v) => cardMarkup(v, v.index)).join('');
+    return `
+      <div class="work-marquee-col">
+        <div class="work-marquee-track" style="animation-duration:${duration}s;">${track}</div>
+      </div>
+    `;
+  }).join('');
+
+  wrap.querySelectorAll('.work-card').forEach((card) => {
     const open = () => openLightbox(parseInt(card.dataset.index, 10));
     card.addEventListener('click', open);
     card.addEventListener('keypress', (e) => { if (e.key === 'Enter') open(); });
