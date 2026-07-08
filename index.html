@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  (function () {
+    var lang = localStorage.getItem('site-lang') || 'en';
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahmoud Elshorbagy — AI Visual Producer</title>
+<meta name="description" content="Mahmoud Elshorbagy — AI Visual Producer crafting CGI 3D product commercials and AI-generated video ads for beauty, fashion, food & beverage, and consumer brands.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236E2BFF'/%3E%3Cstop offset='1' stop-color='%23FF2E9A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230B0B12'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial' font-weight='700' text-anchor='middle' fill='url(%23g)'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="noise-overlay"></div>
+
+<!-- ========================= NAVBAR ========================= -->
+<nav class="navbar">
+  <div class="container">
+    <a href="#hero" class="nav-logo">MAHMOUD <span>ELSHORBAGY</span></a>
+    <ul class="nav-links">
+      <li><a href="#work"><span data-i18n="en">Work</span><span data-i18n="ar">الأعمال</span></a></li>
+      <li><a href="#services"><span data-i18n="en">Services</span><span data-i18n="ar">الخدمات</span></a></li>
+      <li><a href="#about"><span data-i18n="en">About</span><span data-i18n="ar">نبذة عني</span></a></li>
+      <li><a href="#contact"><span data-i18n="en">Contact</span><span data-i18n="ar">تواصل</span></a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="lang-toggle" data-lang-toggle aria-label="Toggle language">
+        <span class="lang-toggle-label">AR</span>
+      </button>
+      <button class="nav-toggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu">
+  <a href="#work"><span data-i18n="en">Work</span><span data-i18n="ar">الأعمال</span></a>
+  <a href="#services"><span data-i18n="en">Services</span><span data-i18n="ar">الخدمات</span></a>
+  <a href="#about"><span data-i18n="en">About</span><span data-i18n="ar">نبذة عني</span></a>
+  <a href="#contact"><span data-i18n="en">Contact</span><span data-i18n="ar">تواصل</span></a>
+</div>
+
+<!-- ========================= HERO ========================= -->
+<header class="hero" id="hero">
+  <div id="hero-canvas-wrap">
+    <div class="hero-fallback-text" style="display:none;">MAHMOUD<br>ELSHORBAGY</div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-title-space"></div>
+    <div class="hero-role">
+      <span data-i18n="en">AI Visual Producer</span>
+      <span data-i18n="ar">منتج مرئي بالذكاء الاصطناعي</span>
+    </div>
+    <p class="hero-tagline">
+      <span data-i18n="en">I turn products into cinematic stories — powered by AI, engineered for impact.</span>
+      <span data-i18n="ar">أحوّل المنتجات إلى قصص سينمائية بصرية — بقوة الذكاء الاصطناعي، وبدقة تهدف لصنع تأثير حقيقي.</span>
+    </p>
+    <div class="hero-cta">
+      <a href="#work" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span data-i18n="en">Watch My Work</span>
+        <span data-i18n="ar">شاهد أعمالي</span>
+      </a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="line"></div>
+    <span data-i18n="en">Scroll</span>
+    <span data-i18n="ar">مرر للأسفل</span>
+  </div>
+</header>
+
+<!-- ========================= TOOLS MARQUEE ========================= -->
+<section class="marquee-section" style="padding:48px 0;">
+  <p class="marquee-label">
+    <span data-i18n="en">Powered by industry-leading AI tools</span>
+    <span data-i18n="ar">مدعوم بأحدث أدوات الذكاء الاصطناعي</span>
+  </p>
+  <div class="marquee-track-wrap">
+    <div class="marquee-track" id="marquee-track"></div>
+  </div>
+</section>
+
+<!-- ========================= WORK ========================= -->
+<section id="work">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">
+        <span data-i18n="en">Showreel</span>
+        <span data-i18n="ar">أعمالي</span>
+      </div>
+      <h2 class="section-title">
+        <span data-i18n="en">Selected <span class="text-gradient">Work</span></span>
+        <span data-i18n="ar">أعمال <span class="text-gradient">مختارة</span></span>
+      </h2>
+      <p class="section-sub">
+        <span data-i18n="en">A showcase of CGI product films and AI-generated ads crafted for brands that want to stand out.</span>
+        <span data-i18n="ar">مجموعة مختارة من أفلام المنتجات ثلاثية الأبعاد والإعلانات المولّدة بالذكاء الاصطناعي لعلامات تجارية تسعى للتميز.</span>
+      </p>
+    </div>
+    <div class="work-grid reveal-group" id="work-grid"></div>
+  </div>
+</section>
+
+<!-- ========================= SERVICES ========================= -->
+<section id="services">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">
+        <span data-i18n="en">What I Do</span>
+        <span data-i18n="ar">ماذا أقدم</span>
+      </div>
+      <h2 class="section-title">
+        <span data-i18n="en">Services Built for <span class="text-gradient">Brands</span></span>
+        <span data-i18n="ar">خدمات مصممة <span class="text-gradient">للعلامات التجارية</span></span>
+      </h2>
+    </div>
+
+    <div class="services-grid reveal-group">
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4l3 4.5"/><path d="M9 4l3 4.5"/><path d="M14 4l3 4.5"/>
+            <rect x="3" y="8.5" width="18" height="11.5" rx="2"/>
+          </svg>
+        </div>
+        <h3 class="service-title">
+          <span data-i18n="en">AI Video Ads</span>
+          <span data-i18n="ar">إعلانات فيديو بالذكاء الاصطناعي</span>
+        </h3>
+        <p class="service-desc">
+          <span data-i18n="en">Scroll-stopping video ads generated with next-gen AI models — fast turnaround, cinematic quality, built to convert.</span>
+          <span data-i18n="ar">إعلانات مرئية تلفت الانتباه من الثانية الأولى، بإنتاج سريع وجودة سينمائية مصممة لتحقيق نتائج فعلية.</span>
+        </p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12v9"/><path d="M12 12l8-4.5"/><path d="M12 12L4 7.5"/>
+          </svg>
+        </div>
+        <h3 class="service-title">
+          <span data-i18n="en">CGI Product Commercials</span>
+          <span data-i18n="ar">إعلانات CGI ثلاثية الأبعاد</span>
+        </h3>
+        <p class="service-desc">
+          <span data-i18n="en">Photoreal 3D product films — no studio, no shoot, no limits. Just flawless renders that sell.</span>
+          <span data-i18n="ar">أفلام منتجات ثلاثية الأبعاد فائقة الواقعية — بدون استوديو، بدون تصوير، وبدون حدود إبداعية.</span>
+        </p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>
+          </svg>
+        </div>
+        <h3 class="service-title">
+          <span data-i18n="en">Brand Content</span>
+          <span data-i18n="ar">محتوى العلامة التجارية</span>
+        </h3>
+        <p class="service-desc">
+          <span data-i18n="en">Consistent, on-brand visual content across every platform — from concept to final cut.</span>
+          <span data-i18n="ar">محتوى بصري متسق يعكس هوية علامتك التجارية على كل المنصات، من الفكرة حتى الإخراج النهائي.</span>
+        </p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M3 17l5-5 4 4 3-3 6 6"/>
+          </svg>
+        </div>
+        <h3 class="service-title">
+          <span data-i18n="en">AI Image Production</span>
+          <span data-i18n="ar">إنتاج صور بالذكاء الاصطناعي</span>
+        </h3>
+        <p class="service-desc">
+          <span data-i18n="en">High-fidelity product and lifestyle imagery, art-directed for brands that want to stand out.</span>
+          <span data-i18n="ar">صور منتجات ولايف ستايل عالية الجودة، مُصممة بعين إبداعية للعلامات التي تريد أن تتميز.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ABOUT ========================= -->
+<section id="about">
+  <div class="container">
+    <div class="about-wrap">
+      <div class="about-visual reveal">
+        <span class="about-visual-monogram">ME</span>
+      </div>
+      <div class="about-text reveal">
+        <div class="eyebrow">
+          <span data-i18n="en">About Me</span>
+          <span data-i18n="ar">نبذة عني</span>
+        </div>
+        <div data-i18n="en">
+          <p>I'm Mahmoud Elshorbagy, an AI Visual Producer specializing in CGI product commercials and AI-generated video advertising.</p>
+          <p>I work at the intersection of creative direction and generative technology — using tools like Kling, Veo, Seedance, and Higgsfield to craft visuals that used to take studios weeks, in a fraction of the time.</p>
+          <p>My clients span beauty, fashion, food & beverage, and consumer goods — brands that need premium visual storytelling without the overhead of traditional production. Every project starts with a story, not a tool — AI is simply how I tell it faster.</p>
+        </div>
+        <div data-i18n="ar">
+          <p>أنا محمود الشوربجي، منتج مرئي متخصص في الذكاء الاصطناعي، أعمل في إنتاج إعلانات CGI ثلاثية الأبعاد للمنتجات وصناعة إعلانات الفيديو المولّدة بالذكاء الاصطناعي.</p>
+          <p>أجمع بين الإخراج الإبداعي والتقنيات التوليدية الحديثة، باستخدام أدوات مثل Kling وVeo وSeedance وHiggsfield، لإنتاج مرئيات كانت تستغرق أسابيع في الاستوديوهات التقليدية، خلال وقت أقصر بكثير.</p>
+          <p>أعمل مع علامات تجارية في مجالات التجميل والأزياء والأغذية والمشروبات والمنتجات الاستهلاكية، تبحث عن سرد بصري احترافي دون تكاليف الإنتاج التقليدي. كل مشروع يبدأ بفكرة وقصة، والذكاء الاصطناعي هو فقط الأداة التي أرويها بها بشكل أسرع.</p>
+        </div>
+
+        <div class="about-stats">
+          <div>
+            <div class="about-stat-num">10+</div>
+            <div class="about-stat-label">
+              <span data-i18n="en">Brand Films</span>
+              <span data-i18n="ar">فيلم للعلامات</span>
+            </div>
+          </div>
+          <div>
+            <div class="about-stat-num">4</div>
+            <div class="about-stat-label">
+              <span data-i18n="en">Industries</span>
+              <span data-i18n="ar">قطاعات</span>
+            </div>
+          </div>
+          <div>
+            <div class="about-stat-num">AI</div>
+            <div class="about-stat-label">
+              <span data-i18n="en">Native Workflow</span>
+              <span data-i18n="ar">سير عمل ذكي</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= CONTACT ========================= -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-card reveal">
+      <h2 class="contact-title">
+        <span data-i18n="en">Let's Create <span class="text-gradient">Something</span></span>
+        <span data-i18n="ar">لنبدأ <span class="text-gradient">مشروعك القادم</span></span>
+      </h2>
+      <p class="contact-sub">
+        <span data-i18n="en">Have a product that needs a story? Let's talk.</span>
+        <span data-i18n="ar">هل لديك منتج يحتاج إلى قصة؟ تواصل معي.</span>
+      </p>
+      <div class="contact-methods">
+        <a class="contact-method whatsapp" href="https://wa.me/201005443671" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.35A9.93 9.93 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.1-.43-4.4-1.18l-.32-.18-3.06.8.82-2.98-.2-.32A7.94 7.94 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/><path d="M16.24 14.37c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12s-.62.78-.76.94-.28.18-.52.06a6.5 6.5 0 0 1-1.93-1.19 7.24 7.24 0 0 1-1.34-1.67c-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42s-.54-1.3-.74-1.78c-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3s-.84.82-.84 2 .86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+        <a class="contact-method email" href="mailto:elshorbagymahmoud8@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <span>Email</span>
+        </a>
+        <a class="contact-method linkedin" href="https://www.linkedin.com/in/mahmoud-elshorbagy-a19961409/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <span>LinkedIn</span>
+        </a>
+        <a class="contact-method behance" href="https://www.behance.net/mahmoudelshorb3" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="15" fill="currentColor">Be</text></svg>
+          <span>Behance</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= FOOTER ========================= -->
+<footer>
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <p class="footer-copy">
+      <span data-i18n="en">&copy; <span id="footer-year"></span> Mahmoud Elshorbagy. All rights reserved.</span>
+      <span data-i18n="ar">&copy; <span id="footer-year"></span> محمود الشوربجي. جميع الحقوق محفوظة.</span>
+    </p>
+    <div class="footer-social">
+      <a href="https://wa.me/201005443671" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.35A9.93 9.93 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.6 0-3.1-.43-4.4-1.18l-.32-.18-3.06.8.82-2.98-.2-.32A7.94 7.94 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/></svg>
+      </a>
+      <a href="mailto:elshorbagymahmoud8@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/mahmoud-elshorbagy-a19961409/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="https://www.behance.net/mahmoudelshorb3" target="_blank" rel="noopener" aria-label="Behance">
+        <svg viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" font-weight="700" font-size="15" fill="currentColor">Be</text></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ========================= LIGHTBOX ========================= -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <video id="lightbox-video" controls playsinline></video>
+    <div class="lightbox-caption" id="lightbox-caption">
+      <div class="work-card-title"><span data-i18n="en"></span><span data-i18n="ar"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================= SCRIPTS ========================= -->
+<script src="js/videos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/lang.js"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="js/hero3d.js"></script>
+
+</body>
+</html>
