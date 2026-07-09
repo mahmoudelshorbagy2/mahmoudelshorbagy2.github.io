@@ -316,6 +316,8 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
   transition: transform 0.35s var(--ease-out), opacity 0.35s;
 }
 
+.mobile-menu { display: none; }
+
 @media (max-width: 860px) {
   .nav-links { display: none; }
   .nav-toggle { display: flex; }
@@ -403,10 +405,16 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
   flex-wrap: wrap;
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: clamp(40px, 10.5vw, 128px);
+  font-size: clamp(28px, 8.75vw, 112px);
   line-height: 0.95;
   letter-spacing: 3px;
 }
+
+@media (max-width: 768px) {
+  .hero-name-line { font-size: clamp(26px, 7.6vw, 60px); letter-spacing: 2px; }
+}
+
+html[lang="ar"] .hero-name-line { font-family: var(--font-arabic); font-weight: 700; letter-spacing: 0; line-height: 1.25; }
 
 .hn-char {
   display: inline-block;
@@ -589,17 +597,34 @@ html[dir="rtl"] .marquee-track { animation-name: marquee-scroll-rtl; }
   position: relative;
   display: flex;
   gap: 22px;
-  height: 640px;
+  height: 820px;
   overflow: hidden;
-  mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
 }
+
+.work-marquee-wrap::before,
+.work-marquee-wrap::after {
+  content: '';
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  height: 2px;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(110,43,255,0.4) 30%, rgba(255,46,154,0.4) 70%, transparent);
+  box-shadow: 0 0 14px rgba(110,43,255,0.3), 0 0 26px rgba(255,46,154,0.16);
+}
+
+.work-marquee-wrap::before { top: 0; }
+.work-marquee-wrap::after { bottom: 0; }
 
 .work-marquee-col {
   position: relative;
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
+  mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
 }
 
 .work-marquee-track {
@@ -629,7 +654,7 @@ html[dir="rtl"] .marquee-track { animation-name: marquee-scroll-rtl; }
 
 @media (max-width: 560px) {
   .work-marquee-col:nth-child(2) { display: none; }
-  .work-marquee-wrap { height: 520px; }
+  .work-marquee-wrap { height: 660px; }
 }
 
 .work-card {

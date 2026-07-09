@@ -74,7 +74,7 @@ function cardMarkup(v, i) {
 }
 
 const MARQUEE_COLUMNS = 3;
-const MARQUEE_DURATIONS = [34, 42, 38];
+const MARQUEE_DURATIONS = [18, 24, 21];
 
 function renderWork() {
   const wrap = document.getElementById('work-grid');

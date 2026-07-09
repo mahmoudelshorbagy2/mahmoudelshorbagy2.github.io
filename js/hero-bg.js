@@ -101,7 +101,10 @@
       const k = 260 / st.z;
       const sx = W / 2 + st.x * k;
       const sy = H / 2 + st.y * k;
-      if (sx < -20 || sx > W + 20 || sy < -20 || sy > H + 20) continue;
+      if (sx < -20 || sx > W + 20 || sy < -20 || sy > H + 20) {
+        if (!reduced) stars[i] = makeStar(true);
+        continue;
+      }
 
       const depth = k;
       const r = Math.max(0.25, depth * (st.big ? 2.3 : 1.3));
@@ -183,6 +186,12 @@
 
   function tick() {
     requestAnimationFrame(tick);
+    // ResizeObserver doesn't fire while the tab is hidden; re-check here so
+    // the canvas can never stay stuck at a stale (e.g. zero-width) size.
+    if (wrap.clientWidth !== W || wrap.clientHeight !== H) {
+      resize();
+      initStars();
+    }
     frame++;
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = '#0B0B12';

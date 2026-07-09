@@ -34,12 +34,20 @@
     return document.documentElement.getAttribute('lang') === 'ar' ? 'ar' : 'en';
   }
 
-  function buildChars(line, text) {
+  // Arabic script is cursive: splitting into per-letter spans breaks letter
+  // joining, so Arabic animates whole words while English stays per-letter.
+  function buildChars(line, text, wordMode) {
     line.innerHTML = '';
-    return Array.from(text).map((ch) => {
+    const units = wordMode ? [text] : Array.from(text);
+    const n = units.length;
+    return units.map((unit, i) => {
       const span = document.createElement('span');
       span.className = 'hn-char';
-      span.textContent = ch;
+      span.textContent = unit;
+      // Spread one continuous gradient across the whole line instead of
+      // restarting it on every letter (which reads as a flat single color).
+      span.style.backgroundSize = `${n * 100}% 100%`;
+      span.style.backgroundPosition = n > 1 ? `${(i / (n - 1)) * 100}% 50%` : '50% 50%';
       line.appendChild(span);
       return span;
     });
@@ -55,9 +63,10 @@
     const lang = currentLang();
     root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
 
+    const wordMode = lang === 'ar';
     const [t1, t2] = TEXT[lang];
-    const chars1 = buildChars(lines[0], t1);
-    const chars2 = buildChars(lines[1], t2);
+    const chars1 = buildChars(lines[0], t1, wordMode);
+    const chars2 = buildChars(lines[1], t2, wordMode);
     const allChars = chars1.concat(chars2);
 
     if (firstRun) {
