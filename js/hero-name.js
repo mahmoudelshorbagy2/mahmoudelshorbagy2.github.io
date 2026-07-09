@@ -11,11 +11,12 @@
     ar: ['محمود', 'الشوربجي']
   };
 
-  const STEP = 175;
-  const REVEAL_DUR = 440;
-  const LINE2_OVERLAP = 250;
-  const POST_HOLD = 80;
-  const FADE_STAGGER = 12;
+  // English types per-letter; Arabic reveals whole words with a full pause
+  // between them and longer, softer transitions (matching the CSS durations).
+  const TIMING = {
+    en: { step: 280, reveal: 440, line2Delay: -250, hold: 80, fadeStagger: 12, fadeDur: 420 },
+    ar: { step: 0, reveal: 700, line2Delay: 1000, hold: 350, fadeStagger: 180, fadeDur: 650 }
+  };
 
   let timers = [];
   let cycleTimer = null;
@@ -79,28 +80,29 @@
       return;
     }
 
-    const line1End = (chars1.length - 1) * STEP + REVEAL_DUR;
-    const line2Start = Math.max(0, line1End - LINE2_OVERLAP);
-    const line2End = line2Start + (chars2.length - 1) * STEP + REVEAL_DUR;
+    const T = TIMING[lang];
+    const line1End = (chars1.length - 1) * T.step + T.reveal;
+    const line2Start = Math.max(0, line1End + T.line2Delay);
+    const line2End = line2Start + (chars2.length - 1) * T.step + T.reveal;
     const revealDone = Math.max(line1End, line2End);
 
     chars1.forEach((c, i) => {
-      timers.push(setTimeout(() => c.classList.add('in'), i * STEP));
+      timers.push(setTimeout(() => c.classList.add('in'), i * T.step));
     });
     chars2.forEach((c, j) => {
-      timers.push(setTimeout(() => c.classList.add('in'), line2Start + j * STEP));
+      timers.push(setTimeout(() => c.classList.add('in'), line2Start + j * T.step));
     });
 
-    const fadeStart = revealDone + POST_HOLD;
+    const fadeStart = revealDone + T.hold;
     allChars.forEach((c, i) => {
       timers.push(setTimeout(() => {
         c.classList.remove('in');
         c.classList.add('out');
-      }, fadeStart + i * FADE_STAGGER));
+      }, fadeStart + i * T.fadeStagger));
     });
 
-    const lastCharFadeStart = fadeStart + (allChars.length - 1) * FADE_STAGGER;
-    const fadeDone = lastCharFadeStart + 420;
+    const lastCharFadeStart = fadeStart + (allChars.length - 1) * T.fadeStagger;
+    const fadeDone = lastCharFadeStart + T.fadeDur;
     cycleTimer = setTimeout(runCycle, fadeDone);
   }
 

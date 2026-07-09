@@ -28,7 +28,7 @@ if (navToggle && mobileMenu) {
 
 const TOOLS = [
   { name: 'Kling', mono: 'K' },
-  { name: 'Google Veo', mono: 'Ve' },
+  { name: 'Claude', mono: 'Cl' },
   { name: 'Seedance', mono: 'Sd' },
   { name: 'Higgsfield', mono: 'Hf' },
   { name: 'Nano Banana Pro', mono: 'Nb' },
