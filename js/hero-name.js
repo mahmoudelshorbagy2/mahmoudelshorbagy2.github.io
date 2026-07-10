@@ -20,7 +20,7 @@
   }
 
   /* ============================================================
-     Arabic — whole-word reveal loop (unchanged behavior)
+     Arabic — whole-word reveal loop
      ============================================================ */
   const AR_TEXT = ['محمود', 'الشوربجي'];
   const AR = { reveal: 700, line2Delay: 1000, hold: 350, fadeStagger: 180, fadeDur: 650 };
@@ -76,18 +76,22 @@
 
   /* ============================================================
      English — SVG stroke drawing (Tilt Prism paths baked at
-     build time in js/hero-name-paths.js). A comet traces the
-     linework letter by letter, fill fades in per letter, the
-     finished name glows, then fades and redraws forever.
+     build time in js/hero-name-paths.js).
+
+     Pass 0 draws each letter's linework out of nothing and fills
+     it. Every pass after that re-traces the finished name with a
+     bright light-stroke that fades behind the comet — a living
+     glow that never stops: the instant the last letter finishes,
+     the next pass starts at the first letter. No pause, no fade.
      ============================================================ */
   const DATA = window.HERO_NAME_PATHS;
 
   const CFG = {
-    drawTotal: 4600,      // full two-line drawing time
+    drawTotal: 8000,      // one full two-line pass — slow, deliberate strokes
     overlap: 0.15,        // next letter starts at 85% of previous
-    minLetterDur: 170,
-    hold: 2800,           // finished + glowing
-    fade: 800,            // soft wipe before the loop restarts
+    minLetterDur: 300,
+    traceFade: 700,       // ms for the bright re-trace stroke to melt away
+    traceOpacity: 0.85,
     particleMax: mobile ? 12 : 36,
     particleEvery: mobile ? 60 : 26, // ms between trail particles
     sparkleLife: 650
@@ -100,7 +104,7 @@
   let letters = [];
   let cometG = null, particleLayer = null, sparkleLayer = null;
   let particles = [], sparkles = [];
-  let raf = null, last = 0, elapsed = 0, phase = 'draw', phaseStart = 0;
+  let raf = null, last = 0, elapsed = 0, firstPass = true;
   let heroVisible = true;
 
   function el(tag, attrs) {
@@ -144,8 +148,14 @@
       const g = el('g', { transform: 'translate(' + line.tx + ',' + line.ty + ')' });
       line.letters.forEach((L) => {
         const p = el('path', { class: 'hn-letter', d: L.d });
+        const trace = el('path', { class: 'hn-trace', d: L.d, opacity: '0' });
         g.appendChild(p);
-        letters.push({ path: p, tx: line.tx, ty: line.ty, len: 0, start: 0, dur: 0, done: false, endPt: null });
+        g.appendChild(trace);
+        letters.push({
+          path: p, trace, tx: line.tx, ty: line.ty,
+          len: 0, start: 0, dur: 0, done: false, armed: false,
+          fading: false, fade: 0, endPt: null
+        });
       });
       svg.appendChild(g);
     });
@@ -169,6 +179,8 @@
       l.endPt = { x: pt.x + l.tx, y: pt.y + l.ty };
       l.path.setAttribute('stroke-dasharray', l.len);
       l.path.setAttribute('stroke-dashoffset', l.len);
+      l.trace.setAttribute('stroke-dasharray', l.len);
+      l.trace.setAttribute('stroke-dashoffset', l.len);
     });
     computeTimeline();
     svg.style.visibility = '';
@@ -282,6 +294,21 @@
     }
   }
 
+  // The bright re-trace stroke melts away shortly after the comet passes.
+  function updateTraceFades(dt) {
+    letters.forEach((l) => {
+      if (!l.fading) return;
+      l.fade += dt;
+      const t = l.fade / CFG.traceFade;
+      if (t >= 1) {
+        l.fading = false;
+        l.trace.setAttribute('opacity', '0');
+      } else {
+        l.trace.setAttribute('opacity', (CFG.traceOpacity * (1 - t)).toFixed(2));
+      }
+    });
+  }
+
   function clearFx() {
     particles.forEach((p) => p.el.remove());
     sparkles.forEach((s) => s.el.remove());
@@ -291,21 +318,62 @@
     hideComet();
   }
 
-  /* ---------- the loop ---------- */
-  function resetCycle() {
-    clearFx();
-    svg.classList.add('hn-resetting');
+  /* ---------- the seamless loop ---------- */
+  function finishLetter(l) {
+    l.done = true;
+    if (firstPass) {
+      l.path.setAttribute('stroke-dashoffset', 0);
+      l.path.classList.add('hn-filled');
+    } else {
+      l.trace.setAttribute('stroke-dashoffset', 0);
+      l.fading = true;
+      l.fade = 0;
+    }
+    spawnSparkle(l.endPt);
+  }
+
+  function completePass() {
+    letters.forEach((l) => { if (!l.done) finishLetter(l); });
+    if (firstPass) svg.classList.add('hn-glow'); // finished name keeps a live glow
+  }
+
+  function beginPass() {
     letters.forEach((l) => {
       l.done = false;
-      l.path.classList.remove('hn-filled');
-      l.path.setAttribute('stroke-dashoffset', l.len);
+      l.armed = false;
     });
-    void svg.getBoundingClientRect(); // flush styles before transitions return
-    svg.classList.remove('hn-fading');
-    svg.classList.remove('hn-resetting');
-    elapsed = 0;
-    phase = 'draw';
   }
+
+  function progressPass() {
+    let tip = null;
+    for (const l of letters) {
+      if (l.done) continue;
+      const p = (elapsed - l.start) / l.dur;
+      if (p <= 0) break; // starts are ordered — nothing after has begun
+      const target = firstPass ? l.path : l.trace;
+      if (!firstPass && !l.armed) {
+        // reset this letter's trace right before it re-draws
+        l.armed = true;
+        l.fading = false;
+        l.trace.setAttribute('stroke-dashoffset', l.len);
+        l.trace.setAttribute('opacity', CFG.traceOpacity);
+      }
+      if (p >= 1) {
+        finishLetter(l);
+      } else {
+        const e = easeInOutQuad(p);
+        target.setAttribute('stroke-dashoffset', (l.len * (1 - e)).toFixed(1));
+        const pt = l.path.getPointAtLength(l.len * e);
+        tip = { x: pt.x + l.tx, y: pt.y + l.ty };
+      }
+    }
+    if (tip) {
+      moveComet(tip);
+      spawnParticles(tip, dt_shared);
+    }
+  }
+
+  let dt_shared = 0;
 
   function frame(ts) {
     raf = requestAnimationFrame(frame);
@@ -314,48 +382,20 @@
     if (dt > 100) dt = 100; // tab switches shouldn't teleport the comet
     last = ts;
     elapsed += dt;
+    dt_shared = dt;
 
     updateParticles(dt);
     updateSparkles(dt);
+    updateTraceFades(dt);
 
-    if (phase === 'draw') {
-      let tip = null;
-      for (const l of letters) {
-        if (l.done) continue;
-        const p = (elapsed - l.start) / l.dur;
-        if (p <= 0) break; // starts are ordered — nothing after has begun
-        if (p >= 1) {
-          l.path.setAttribute('stroke-dashoffset', 0);
-          l.path.classList.add('hn-filled');
-          l.done = true;
-          spawnSparkle(l.endPt);
-        } else {
-          const e = easeInOutQuad(p);
-          l.path.setAttribute('stroke-dashoffset', (l.len * (1 - e)).toFixed(1));
-          const pt = l.path.getPointAtLength(l.len * e);
-          tip = { x: pt.x + l.tx, y: pt.y + l.ty };
-        }
-      }
-      if (tip) {
-        moveComet(tip);
-        spawnParticles(tip, dt);
-      }
-      if (letters.every((l) => l.done)) {
-        hideComet();
-        svg.classList.add('hn-glow');
-        phase = 'hold';
-        phaseStart = elapsed;
-      }
-    } else if (phase === 'hold') {
-      if (elapsed - phaseStart >= CFG.hold) {
-        svg.classList.remove('hn-glow');
-        svg.classList.add('hn-fading');
-        phase = 'fade';
-        phaseStart = elapsed;
-      }
-    } else if (phase === 'fade') {
-      if (elapsed - phaseStart >= CFG.fade + 60) resetCycle();
+    // Seamless loop: the moment the pass ends, the next one begins.
+    if (elapsed >= CFG.drawTotal) {
+      completePass();
+      firstPass = false;
+      beginPass();
+      elapsed -= CFG.drawTotal;
     }
+    progressPass();
   }
 
   function startEn() {
@@ -372,17 +412,22 @@
         l.path.setAttribute('stroke-dashoffset', 0);
         l.path.classList.add('hn-filled');
       });
+      svg.classList.add('hn-glow');
       return;
     }
-    svg.classList.remove('hn-fading', 'hn-glow', 'hn-resetting');
+    svg.classList.remove('hn-glow');
     letters.forEach((l) => {
       l.done = false;
+      l.armed = false;
+      l.fading = false;
       l.path.classList.remove('hn-filled');
       l.path.setAttribute('stroke-dashoffset', l.len);
+      l.trace.setAttribute('stroke-dashoffset', l.len);
+      l.trace.setAttribute('opacity', '0');
     });
     elapsed = 0;
     last = 0;
-    phase = 'draw';
+    firstPass = true;
     if (!raf) raf = requestAnimationFrame(frame);
   }
 

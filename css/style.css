@@ -434,11 +434,6 @@ html[lang="ar"] .hero-name-svg { display: none; }
           drop-shadow(0 0 70px rgba(255, 61, 174, 0.3));
 }
 
-.hero-name-svg.hn-fading { opacity: 0; }
-
-.hero-name-svg.hn-resetting,
-.hero-name-svg.hn-resetting .hn-letter { transition: none !important; }
-
 .hn-letter {
   fill: url(#hn-grad);
   fill-opacity: 0;
@@ -451,6 +446,18 @@ html[lang="ar"] .hero-name-svg { display: none; }
 }
 
 .hn-letter.hn-filled { fill-opacity: 1; }
+
+/* Bright light-stroke that re-traces the finished name each pass —
+   drawn by JS (dashoffset + opacity), it rides just above the letters. */
+.hn-trace {
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 2.2;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  mix-blend-mode: screen;
+}
 
 @media (max-width: 768px) {
   .hero-name-svg {
