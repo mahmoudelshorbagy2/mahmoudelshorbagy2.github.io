@@ -454,10 +454,8 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
   transition: opacity 0.8s ease, filter 0.9s ease;
 }
 
-.hero-name-svg.hn-glow {
-  filter: drop-shadow(0 0 22px rgba(139, 92, 255, 0.5))
-          drop-shadow(0 0 70px rgba(255, 61, 174, 0.3));
-}
+/* The pass reset happens inside a single frame — no transitions allowed */
+.hero-name-svg.hn-resetting .hn-letter { transition: none !important; }
 
 /* fill/stroke gradients are set per-SVG by JS (unique ids per language) */
 .hn-letter {
@@ -475,27 +473,11 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
    the kashida joins read as one continuous calligraphic line. */
 .hn-ar .hn-letter.hn-filled { stroke-opacity: 0; }
 
-/* Bright light-stroke that re-traces the finished name each pass —
-   drawn by JS (dashoffset + opacity), it rides just above the letters. */
-.hn-trace {
-  fill: none;
-  stroke: #FFFFFF;
-  stroke-width: 2.2;
-  vector-effect: non-scaling-stroke;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  mix-blend-mode: screen;
-}
-
 @media (max-width: 768px) {
   .hero-name-svg {
     width: 94vw;
     filter: drop-shadow(0 0 12px rgba(139, 92, 255, 0.26))
             drop-shadow(0 0 32px rgba(255, 61, 174, 0.12));
-  }
-  .hero-name-svg.hn-glow {
-    filter: drop-shadow(0 0 16px rgba(139, 92, 255, 0.46))
-            drop-shadow(0 0 48px rgba(255, 61, 174, 0.26));
   }
   .hn-letter { stroke-width: 1.2; }
 }
