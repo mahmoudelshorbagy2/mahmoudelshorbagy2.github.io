@@ -301,19 +301,38 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
   box-shadow: 0 0 18px rgba(110,43,255,0.3), 0 0 28px rgba(255,46,154,0.18);
 }
 
+/* 44x44 touch target; the three bars stay 26px wide inside it */
 .nav-toggle {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
-  width: 26px;
+  width: 44px;
+  height: 44px;
+  margin: -9px;
 }
 
 .nav-toggle span {
   height: 2px;
-  width: 100%;
+  width: 26px;
   background: var(--text-primary);
   border-radius: 2px;
   transition: transform 0.35s var(--ease-out), opacity 0.35s;
+}
+
+/* Star burst fired from the menu button on open */
+.star-burst {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+}
+
+.star-burst span {
+  position: absolute;
+  will-change: transform, opacity;
+  text-shadow: 0 0 10px currentColor;
 }
 
 .mobile-menu { display: none; }
@@ -340,14 +359,38 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
 
   .mobile-menu.open { opacity: 1; pointer-events: auto; }
 
+  /* Brand-gradient links, comfortable 44px+ touch targets */
   .mobile-menu a {
     font-family: var(--font-heading);
     font-size: 28px;
     font-weight: 600;
-    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 6px 32px;
+    background: linear-gradient(100deg, #C9B4FF, #B98CFF 45%, #FF9AD5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 14px rgba(140, 80, 255, 0.25));
   }
 
   html[lang="ar"] .mobile-menu a { font-family: var(--font-arabic); }
+
+  /* Links float up one after another as the menu opens */
+  @media (prefers-reduced-motion: no-preference) {
+    .mobile-menu a {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
+    }
+    .mobile-menu.open a { opacity: 1; transform: none; }
+    .mobile-menu.open a:nth-child(1) { transition-delay: 0.06s; }
+    .mobile-menu.open a:nth-child(2) { transition-delay: 0.13s; }
+    .mobile-menu.open a:nth-child(3) { transition-delay: 0.2s; }
+    .mobile-menu.open a:nth-child(4) { transition-delay: 0.27s; }
+  }
 
   body.menu-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   body.menu-open .nav-toggle span:nth-child(2) { opacity: 0; }

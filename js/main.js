@@ -9,10 +9,46 @@ window.addEventListener('scroll', () => {
 
 const navToggle = document.querySelector('.nav-toggle');
 const mobileMenu = document.querySelector('.mobile-menu');
+
+// Brand-colored star burst from the menu button when the menu opens.
+const BURST_COLORS = ['#8B5CFF', '#B44CFF', '#FF2E9A', '#FF9AD5', '#FFFFFF'];
+function burstStars(fromEl) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const r = fromEl.getBoundingClientRect();
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  const layer = document.createElement('div');
+  layer.className = 'star-burst';
+  const N = 14;
+  for (let i = 0; i < N; i++) {
+    const s = document.createElement('span');
+    s.textContent = '✦';
+    const size = 8 + Math.random() * 10;
+    s.style.left = cx + 'px';
+    s.style.top = cy + 'px';
+    s.style.fontSize = size + 'px';
+    s.style.color = BURST_COLORS[(Math.random() * BURST_COLORS.length) | 0];
+    layer.appendChild(s);
+    const a = (i / N) * Math.PI * 2 + Math.random() * 0.6;
+    const dist = 36 + Math.random() * 54;
+    const dx = Math.cos(a) * dist;
+    const dy = Math.sin(a) * dist;
+    const dur = 550 + Math.random() * 350;
+    s.animate([
+      { transform: 'translate(-50%,-50%) scale(0) rotate(0deg)', opacity: 1 },
+      { transform: 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px)) scale(1) rotate(' + (90 + Math.random() * 90) + 'deg)', opacity: 0 }
+    ], { duration: dur, easing: 'cubic-bezier(0.2, 0.7, 0.3, 1)', fill: 'forwards' });
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 1000);
+}
+
 if (navToggle && mobileMenu) {
   navToggle.addEventListener('click', () => {
+    const opening = !document.body.classList.contains('menu-open');
     document.body.classList.toggle('menu-open');
     mobileMenu.classList.toggle('open');
+    if (opening) burstStars(navToggle);
   });
   mobileMenu.querySelectorAll('a').forEach((a) => {
     a.addEventListener('click', () => {
