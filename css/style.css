@@ -414,6 +414,57 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
   .hero-name-line { font-size: clamp(26px, 7.6vw, 60px); letter-spacing: 2px; }
 }
 
+/* English name renders as an SVG drawing (Tilt Prism paths) — the
+   line divs are only used by the Arabic word animation. */
+html:not([lang="ar"]) .hero-name-line { display: none; }
+html[lang="ar"] .hero-name-svg { display: none; }
+
+.hero-name-svg {
+  display: block;
+  width: min(88vw, 760px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 16px rgba(139, 92, 255, 0.28))
+          drop-shadow(0 0 48px rgba(255, 61, 174, 0.14));
+  transition: opacity 0.8s ease, filter 0.9s ease;
+}
+
+.hero-name-svg.hn-glow {
+  filter: drop-shadow(0 0 22px rgba(139, 92, 255, 0.5))
+          drop-shadow(0 0 70px rgba(255, 61, 174, 0.3));
+}
+
+.hero-name-svg.hn-fading { opacity: 0; }
+
+.hero-name-svg.hn-resetting,
+.hero-name-svg.hn-resetting .hn-letter { transition: none !important; }
+
+.hn-letter {
+  fill: url(#hn-grad);
+  fill-opacity: 0;
+  stroke: url(#hn-grad);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: fill-opacity 0.55s ease-out;
+}
+
+.hn-letter.hn-filled { fill-opacity: 1; }
+
+@media (max-width: 768px) {
+  .hero-name-svg {
+    width: 94vw;
+    filter: drop-shadow(0 0 12px rgba(139, 92, 255, 0.26))
+            drop-shadow(0 0 32px rgba(255, 61, 174, 0.12));
+  }
+  .hero-name-svg.hn-glow {
+    filter: drop-shadow(0 0 16px rgba(139, 92, 255, 0.46))
+            drop-shadow(0 0 48px rgba(255, 61, 174, 0.26));
+  }
+  .hn-letter { stroke-width: 1.2; }
+}
+
 html[lang="ar"] .hero-name-line {
   font-family: 'Cairo', var(--font-arabic);
   font-weight: 900;
