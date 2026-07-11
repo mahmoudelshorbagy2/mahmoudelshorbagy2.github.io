@@ -452,21 +452,10 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
   gap: 2px;
 }
 
-/* Static ambient glow behind the name — replaces per-frame drop-shadow
-   filters on the animating SVG (they repainted on every frame). */
-.hero-name::before {
-  content: '';
-  position: absolute;
-  inset: -12% -6%;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 55% 60% at 50% 38%, rgba(123, 47, 254, 0.18), transparent 70%),
-    radial-gradient(ellipse 50% 55% at 50% 68%, rgba(255, 46, 154, 0.12), transparent 70%);
-}
+/* No ambient glow behind the name — the pearl gradient carries the light. */
 
 /* Both names render as SVG brush writing: Norican for English,
-   Alexandria + kashida for Arabic. JS toggles which one shows. */
+   Amiri Quran + kashida for Arabic. JS toggles which one shows. */
 .hero-name-svg {
   display: block;
   width: min(88vw, 760px);

@@ -25,12 +25,24 @@
   const MAXZ = 1400;
   const rand = (a, b) => a + Math.random() * (b - a);
 
-  function makeStar(recycle) {
+  // Three parallax depth layers — flying into space: lots of tiny far
+  // stars drifting slowly, fewer near ones rushing past bigger and faster.
+  const LAYERS = [
+    { share: 0.62, speed: 0.9, size: 0.75, bigChance: 0 },     // far dust
+    { share: 0.28, speed: 2.3, size: 1.15, bigChance: 0.06 },  // mid field
+    { share: 0.10, speed: 4.6, size: 1.6, bigChance: 0.22 }    // near flyby
+  ];
+
+  function makeStar(recycle, layerIdx) {
+    const L = LAYERS[layerIdx];
     return {
       x: (Math.random() - 0.5) * W * 2.2,
       y: (Math.random() - 0.5) * H * 2.2,
       z: recycle ? rand(MAXZ * 0.5, MAXZ) : rand(1, MAXZ),
-      big: Math.random() < 0.08,
+      layer: layerIdx,
+      speed: L.speed * rand(0.8, 1.2),
+      size: L.size,
+      big: Math.random() < L.bigChance,
       tw: Math.random() * Math.PI * 2,
       colorRoll: Math.random()
     };
@@ -39,9 +51,12 @@
   let stars = [];
   function initStars() {
     const isMobile = window.innerWidth <= 768;
-    const count = isMobile ? 180 : 380;
+    const count = isMobile ? 340 : 720;
     stars = [];
-    for (let i = 0; i < count; i++) stars.push(makeStar(false));
+    LAYERS.forEach((L, li) => {
+      const n = Math.round(count * L.share);
+      for (let i = 0; i < n; i++) stars.push(makeStar(false, li));
+    });
   }
 
   function starRGB(s) {
@@ -112,20 +127,20 @@
   function drawStars() {
     for (let i = 0; i < stars.length; i++) {
       if (!reduced) {
-        stars[i].z -= 2.3;
-        if (stars[i].z <= 1) stars[i] = makeStar(true);
+        stars[i].z -= stars[i].speed;
+        if (stars[i].z <= 1) stars[i] = makeStar(true, stars[i].layer);
       }
       const st = stars[i];
       const k = 260 / st.z;
       const sx = W / 2 + st.x * k;
       const sy = H / 2 + st.y * k;
       if (sx < -20 || sx > W + 20 || sy < -20 || sy > H + 20) {
-        if (!reduced) stars[i] = makeStar(true);
+        if (!reduced) stars[i] = makeStar(true, st.layer);
         continue;
       }
 
       const depth = k;
-      const r = Math.max(0.25, depth * (st.big ? 2.3 : 1.3));
+      const r = Math.max(0.2, depth * st.size * (st.big ? 2.3 : 1.3));
       const twinkle = reduced ? 1 : (0.55 + 0.45 * Math.sin(st.tw + frame * 0.05));
       const alpha = Math.min(1, depth * 1.5) * twinkle;
       if (alpha <= 0.01) continue;
@@ -140,10 +155,15 @@
         ctx.fill();
       }
 
-      ctx.beginPath();
+      // Tiny far stars: cheap rects instead of arcs (most of the field).
       ctx.fillStyle = `rgba(${rgb},${alpha.toFixed(3)})`;
-      ctx.arc(sx, sy, r, 0, Math.PI * 2);
-      ctx.fill();
+      if (r < 0.9) {
+        ctx.fillRect(sx - r, sy - r, r * 2, r * 2);
+      } else {
+        ctx.beginPath();
+        ctx.arc(sx, sy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
   }
 

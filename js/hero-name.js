@@ -33,8 +33,9 @@
      resets in the same frame: endless loop, no pause, no white.
      ============================================================ */
   const SVG_NS = 'http://www.w3.org/2000/svg';
-  const PARTICLE_COLORS = ['#C9B4FF', '#B88CFF', '#FF9AD5', '#FF7AC8'];
-  const SPARKLE_COLORS = ['#CDB0FF', '#FF9AD5'];
+  // Light white-violet dust to match the pearl gradient of the name.
+  const PARTICLE_COLORS = ['#FFFFFF', '#F2ECFF', '#E4DCFF', '#C9B4FF'];
+  const SPARKLE_COLORS = ['#FFFFFF', '#DCCEFF'];
 
   function el(tag, attrs) {
     const n = document.createElementNS(SVG_NS, tag);
@@ -83,20 +84,22 @@
       const gradId = 'hn-grad-' + opts.id;
       const haloId = 'hn-halo-' + opts.id;
       const defs = el('defs', {});
-      // One vertical gradient across both lines: violet on top, magenta below.
+      // One vertical gradient across both lines: pearl white into soft
+      // violet, top -> bottom (white / #E4DCFF at 60% / #B9A3FF).
       const grad = el('linearGradient', {
         id: gradId, gradientUnits: 'userSpaceOnUse',
         x1: 0, y1: data.gradY[0], x2: 0, y2: data.gradY[1]
       });
-      // Matches the WATCH MY WORK button gradient, top -> bottom.
-      grad.appendChild(el('stop', { offset: '0', 'stop-color': '#7B2FFE' }));
-      grad.appendChild(el('stop', { offset: '1', 'stop-color': '#FF2E9A' }));
+      grad.appendChild(el('stop', { offset: '0', 'stop-color': '#FFFFFF' }));
+      grad.appendChild(el('stop', { offset: '0.6', 'stop-color': '#E4DCFF' }));
+      grad.appendChild(el('stop', { offset: '1', 'stop-color': '#B9A3FF' }));
       defs.appendChild(grad);
 
+      // Brush-tip halo: light white-violet glow in tune with the gradient.
       const halo = el('radialGradient', { id: haloId });
-      halo.appendChild(el('stop', { offset: '0', 'stop-color': 'rgba(220,196,255,0.95)' }));
-      halo.appendChild(el('stop', { offset: '0.35', 'stop-color': 'rgba(200,160,255,0.55)' }));
-      halo.appendChild(el('stop', { offset: '1', 'stop-color': 'rgba(160,90,255,0)' }));
+      halo.appendChild(el('stop', { offset: '0', 'stop-color': 'rgba(255,255,255,0.95)' }));
+      halo.appendChild(el('stop', { offset: '0.35', 'stop-color': 'rgba(228,220,255,0.55)' }));
+      halo.appendChild(el('stop', { offset: '1', 'stop-color': 'rgba(185,163,255,0)' }));
       defs.appendChild(halo);
       svg.appendChild(defs);
 
@@ -150,7 +153,7 @@
       sparkleLayer = el('g', {});
       cometG = el('g', { opacity: '0' });
       cometG.appendChild(el('circle', { r: 8, fill: 'url(#' + haloId + ')' }));
-      cometG.appendChild(el('circle', { r: 1.7, fill: '#DCC5FF' }));
+      cometG.appendChild(el('circle', { r: 1.7, fill: '#FFFFFF' }));
       svg.appendChild(particleLayer);
       svg.appendChild(sparkleLayer);
       svg.appendChild(cometG);
@@ -383,10 +386,11 @@
   const engines = {
     // Norican script: moderate stems -> brush ~22 units at 100px em.
     en: window.HERO_NAME_PATHS ? createEngine(window.HERO_NAME_PATHS, { id: 'en', brushWidth: 22 }) : null,
-    // Alexandria 800 has heavy stems -> wider brush. Ink-brush layering
-    // (tapered tip + soft half-tone fringe) for a real brush feel.
+    // Amiri Quran naskh: calligraphic outlines with round bowls -> the
+    // brush must cover the widest letter bodies at ~150-unit em. Ink-brush
+    // layering (tapered tip + soft half-tone fringe) for a real brush feel.
     // "محمود" finishes completely before "الشوربجي" begins.
-    ar: window.HERO_NAME_PATHS_AR ? createEngine(window.HERO_NAME_PATHS_AR, { id: 'ar', brushWidth: 40, lineGap: true, inkBrush: true }) : null
+    ar: window.HERO_NAME_PATHS_AR ? createEngine(window.HERO_NAME_PATHS_AR, { id: 'ar', brushWidth: 34, lineGap: true, inkBrush: true }) : null
   };
 
   function applyLang() {
