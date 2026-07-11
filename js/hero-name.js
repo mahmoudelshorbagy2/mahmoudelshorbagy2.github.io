@@ -84,15 +84,15 @@
       const gradId = 'hn-grad-' + opts.id;
       const haloId = 'hn-halo-' + opts.id;
       const defs = el('defs', {});
-      // One vertical gradient across both lines: pearl white into soft
-      // violet, top -> bottom (white / #E4DCFF at 60% / #B9A3FF).
+      // One vertical gradient across both lines: purple-magenta,
+      // top -> bottom (#A78BFA / #8B5CF6 at 50% / #D96FE0).
       const grad = el('linearGradient', {
         id: gradId, gradientUnits: 'userSpaceOnUse',
         x1: 0, y1: data.gradY[0], x2: 0, y2: data.gradY[1]
       });
-      grad.appendChild(el('stop', { offset: '0', 'stop-color': '#FFFFFF' }));
-      grad.appendChild(el('stop', { offset: '0.6', 'stop-color': '#E4DCFF' }));
-      grad.appendChild(el('stop', { offset: '1', 'stop-color': '#B9A3FF' }));
+      grad.appendChild(el('stop', { offset: '0', 'stop-color': '#A78BFA' }));
+      grad.appendChild(el('stop', { offset: '0.5', 'stop-color': '#8B5CF6' }));
+      grad.appendChild(el('stop', { offset: '1', 'stop-color': '#D96FE0' }));
       defs.appendChild(grad);
 
       // Brush-tip halo: light white-violet glow in tune with the gradient.
