@@ -454,24 +454,8 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
   transition: opacity 0.8s ease, filter 0.9s ease;
 }
 
-/* The pass reset happens inside a single frame — no transitions allowed */
-.hero-name-svg.hn-resetting .hn-letter { transition: none !important; }
-
-/* fill/stroke gradients are set per-SVG by JS (unique ids per language) */
-.hn-letter {
-  fill-opacity: 0;
-  stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: fill-opacity 0.55s ease-out, stroke-opacity 0.55s ease-out;
-}
-
-.hn-letter.hn-filled { fill-opacity: 1; }
-
-/* Arabic letterforms are solid: once filled, hide the outline stroke so
-   the kashida joins read as one continuous calligraphic line. */
-.hn-ar .hn-letter.hn-filled { stroke-opacity: 0; }
+/* Letters are gradient fills revealed by JS-driven brush masks —
+   no strokes, no transitions; everything is painted behind the brush. */
 
 @media (max-width: 768px) {
   .hero-name-svg {
@@ -479,14 +463,15 @@ html[lang="ar"] .nav-links a { font-family: var(--font-arabic); font-weight: 500
     filter: drop-shadow(0 0 12px rgba(139, 92, 255, 0.26))
             drop-shadow(0 0 32px rgba(255, 61, 174, 0.12));
   }
-  .hn-letter { stroke-width: 1.2; }
 }
 
-/* The Arabic block is squarer than the English one — cap its width so it
-   doesn't tower over the rest of the hero. */
+/* Per-language width caps: both blocks are squarer than a single text
+   line, so keep them from towering over the rest of the hero. */
+.hero-name-svg.hn-en { width: min(80vw, 560px); }
 .hero-name-svg.hn-ar { width: min(84vw, 640px); }
 
 @media (max-width: 768px) {
+  .hero-name-svg.hn-en { width: 92vw; }
   .hero-name-svg.hn-ar { width: 90vw; }
 }
 

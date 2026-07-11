@@ -18,17 +18,19 @@
   }
 
   /* ============================================================
-     Name drawing engine — one instance per language.
+     Name brush-writing engine — one instance per language.
 
-     Letter paths are baked at build time (js/hero-name-paths.js
-     for Tilt Prism EN, js/hero-name-paths-ar.js for Alexandria AR
-     with kashida; AR glyphs are pre-ordered right-to-left).
+     Letter paths are baked at build time (js/hero-name-paths.js:
+     Norican connected script EN, js/hero-name-paths-ar.js:
+     Alexandria AR with kashida, glyphs pre-ordered right-to-left).
 
-     Every pass draws the letters out of nothing, one by one. The
-     instant the last letter finishes, everything resets in the
-     same frame and the drawing starts over from the first letter:
-     an endless loop with no pause, no fade, no complete-name hold
-     and no white sweep — all light is in brand violet/pink.
+     Each letter's gradient fill sits behind an SVG mask whose
+     content is the same path drawn as a thick round stroke. The
+     mask stroke is dash-revealed, so the letter body gets painted
+     progressively behind the brush tip — true brush writing, not
+     an outline trace. A comet with brand-colored stardust rides
+     the tip. The instant the last letter finishes, everything
+     resets in the same frame: endless loop, no pause, no white.
      ============================================================ */
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const PARTICLE_COLORS = ['#C9B4FF', '#B88CFF', '#FF9AD5', '#FF7AC8'];
@@ -101,10 +103,30 @@
       data.lines.forEach((line, li) => {
         const g = el('g', { transform: 'translate(' + line.tx + ',' + line.ty + ')' });
         line.letters.forEach((L, i) => {
-          const p = el('path', { class: 'hn-letter', d: L.d, fill: 'url(#' + gradId + ')', stroke: 'url(#' + gradId + ')' });
+          // The brush: same path as the letter, drawn as a thick round
+          // stroke inside a mask. Dash-revealing it paints the letter
+          // body progressively behind the tip.
+          const maskId = 'hn-m-' + opts.id + '-' + li + '-' + i;
+          const mask = el('mask', {
+            id: maskId, maskUnits: 'userSpaceOnUse',
+            x: -10000, y: -10000, width: 20000, height: 20000
+          });
+          const brush = el('path', {
+            d: L.d, fill: 'none', stroke: '#fff',
+            'stroke-width': opts.brushWidth,
+            'stroke-linecap': 'round', 'stroke-linejoin': 'round'
+          });
+          mask.appendChild(brush);
+          defs.appendChild(mask);
+
+          const p = el('path', {
+            class: 'hn-letter', d: L.d,
+            fill: 'url(#' + gradId + ')', mask: 'url(#' + maskId + ')'
+          });
           g.appendChild(p);
           letters.push({
-            path: p, tx: line.tx, ty: line.ty,
+            brush, fill: p, maskRef: 'url(#' + maskId + ')',
+            tx: line.tx, ty: line.ty,
             lineStart: li > 0 && i === 0,
             len: 0, start: 0, dur: 0, done: false, endPt: null
           });
@@ -126,11 +148,11 @@
 
       // Measure after insertion, then arm the dashes before first paint.
       letters.forEach((l) => {
-        l.len = l.path.getTotalLength();
-        const pt = l.path.getPointAtLength(l.len);
+        l.len = l.brush.getTotalLength();
+        const pt = l.brush.getPointAtLength(l.len);
         l.endPt = { x: pt.x + l.tx, y: pt.y + l.ty };
-        l.path.setAttribute('stroke-dasharray', l.len);
-        l.path.setAttribute('stroke-dashoffset', l.len);
+        l.brush.setAttribute('stroke-dasharray', l.len);
+        l.brush.setAttribute('stroke-dashoffset', l.len);
       });
       computeTimeline();
       svg.style.visibility = '';
@@ -250,22 +272,21 @@
     /* ---------- the seamless loop ---------- */
     function finishLetter(l) {
       l.done = true;
-      l.path.setAttribute('stroke-dashoffset', 0);
-      l.path.classList.add('hn-filled');
+      l.brush.setAttribute('stroke-dashoffset', 0);
+      // Drop the mask: guarantees every last pixel (like dotting the
+      // letter after the stroke) and lightens rendering afterwards.
+      l.fill.removeAttribute('mask');
       spawnSparkle(l.endPt);
     }
 
-    // Instant reset, no transitions: the finished name never sits on
+    // Instant attribute-only reset: the finished name never sits on
     // screen — the same frame that ends a pass starts the next one.
     function resetPass() {
-      svg.classList.add('hn-resetting');
       letters.forEach((l) => {
         l.done = false;
-        l.path.classList.remove('hn-filled');
-        l.path.setAttribute('stroke-dashoffset', l.len);
+        l.fill.setAttribute('mask', l.maskRef);
+        l.brush.setAttribute('stroke-dashoffset', l.len);
       });
-      void svg.getBoundingClientRect(); // flush styles while transitions are off
-      svg.classList.remove('hn-resetting');
     }
 
     function progressPass() {
@@ -278,8 +299,8 @@
           finishLetter(l);
         } else {
           const e = easeInOutQuad(p);
-          l.path.setAttribute('stroke-dashoffset', (l.len * (1 - e)).toFixed(1));
-          const pt = l.path.getPointAtLength(l.len * e);
+          l.brush.setAttribute('stroke-dashoffset', (l.len * (1 - e)).toFixed(1));
+          const pt = l.brush.getPointAtLength(l.len * e);
           tip = { x: pt.x + l.tx, y: pt.y + l.ty };
         }
       }
@@ -315,18 +336,14 @@
       revealHeroRole();
 
       if (reduced) {
-        // Static, fully drawn and filled — no loop, no comet.
+        // Static, fully painted — no loop, no comet.
         letters.forEach((l) => {
-          l.path.setAttribute('stroke-dashoffset', 0);
-          l.path.classList.add('hn-filled');
+          l.brush.setAttribute('stroke-dashoffset', 0);
+          l.fill.removeAttribute('mask');
         });
         return;
       }
-      letters.forEach((l) => {
-        l.done = false;
-        l.path.classList.remove('hn-filled');
-        l.path.setAttribute('stroke-dashoffset', l.len);
-      });
+      resetPass();
       elapsed = 0;
       last = 0;
       if (!raf) raf = requestAnimationFrame(frame);
@@ -344,9 +361,11 @@
   }
 
   const engines = {
-    en: window.HERO_NAME_PATHS ? createEngine(window.HERO_NAME_PATHS, { id: 'en' }) : null,
-    // Arabic: "محمود" finishes completely before "الشوربجي" begins.
-    ar: window.HERO_NAME_PATHS_AR ? createEngine(window.HERO_NAME_PATHS_AR, { id: 'ar', lineGap: true }) : null
+    // Norican script: moderate stems -> brush ~22 units at 100px em.
+    en: window.HERO_NAME_PATHS ? createEngine(window.HERO_NAME_PATHS, { id: 'en', brushWidth: 22 }) : null,
+    // Alexandria 800 has heavy stems -> wider brush. "محمود" finishes
+    // completely before "الشوربجي" begins.
+    ar: window.HERO_NAME_PATHS_AR ? createEngine(window.HERO_NAME_PATHS_AR, { id: 'ar', brushWidth: 40, lineGap: true }) : null
   };
 
   function applyLang() {
