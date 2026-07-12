@@ -385,19 +385,11 @@
 
   const engines = {
     // Norican script: moderate stems -> brush ~22 units at 100px em.
-    en: window.HERO_NAME_PATHS ? createEngine(window.HERO_NAME_PATHS, { id: 'en', brushWidth: 22 }) : null,
-    // Amiri Quran naskh: calligraphic outlines with round bowls -> the
-    // brush must cover the widest letter bodies at ~150-unit em. Ink-brush
-    // layering (tapered tip + soft half-tone fringe) for a real brush feel.
-    // "محمود" finishes completely before "الشوربجي" begins.
-    ar: window.HERO_NAME_PATHS_AR ? createEngine(window.HERO_NAME_PATHS_AR, { id: 'ar', brushWidth: 34, lineGap: true, inkBrush: true }) : null
+    en: window.HERO_NAME_PATHS ? createEngine(window.HERO_NAME_PATHS, { id: 'en', brushWidth: 22 }) : null
   };
 
   function applyLang() {
-    const lang = currentLang();
-    const other = lang === 'ar' ? 'en' : 'ar';
-    if (engines[other]) engines[other].stop();
-    if (engines[lang]) engines[lang].start();
+    if (engines.en) engines.en.start();
   }
 
   applyLang();
