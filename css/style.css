@@ -686,12 +686,7 @@ html[dir="rtl"] .marquee-track { animation-name: marquee-scroll-rtl; }
 
 .work-marquee-track .work-card { flex-shrink: 0; }
 
-@media (max-width: 860px) {
-  .work-marquee-col:nth-child(3) { display: none; }
-}
-
 @media (max-width: 560px) {
-  .work-marquee-col:nth-child(2) { display: none; }
   .work-marquee-wrap { height: 660px; }
 }
 

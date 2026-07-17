@@ -129,35 +129,115 @@ function cardMarkup(v, i) {
   `;
 }
 
-const MARQUEE_COLUMNS = 3;
-const MARQUEE_DURATIONS = [18, 24, 21];
+function getColumnCount() {
+  var w = window.innerWidth;
+  if (w <= 560) return 1;
+  if (w <= 860) return 2;
+  return 3;
+}
 
-function renderWork() {
-  const wrap = document.getElementById('work-grid');
-  if (!wrap || typeof SHOWREEL === 'undefined') return;
+function getColumnDurations(count) {
+  if (count === 1) return [60];
+  if (count === 2) return [32, 32];
+  return [18, 24, 21];
+}
 
-  const columns = Array.from({ length: MARQUEE_COLUMNS }, () => []);
-  SHOWREEL.forEach((v, i) => {
-    columns[i % MARQUEE_COLUMNS].push({ ...v, index: i });
-  });
+function getTranslateY(transformValue) {
+  if (!transformValue || transformValue === 'none') return 0;
+  var m = transformValue.match(/matrix.*\((.+)\)/);
+  if (!m) return 0;
+  var v = m[1].split(', ').map(Number);
+  return v.length === 16 ? v[13] : (v[5] || 0);
+}
 
-  wrap.innerHTML = columns.map((col, colIndex) => {
-    const duration = MARQUEE_DURATIONS[colIndex % MARQUEE_DURATIONS.length];
-    const track = col.concat(col).map((v) => cardMarkup(v, v.index)).join('');
-    return `
-      <div class="work-marquee-col">
-        <div class="work-marquee-track" style="animation-duration:${duration}s;">${track}</div>
-      </div>
-    `;
-  }).join('');
+function setupTouchDrag() {
+  document.querySelectorAll('.work-marquee-track').forEach(function (track) {
+    var drag = null;
 
-  wrap.querySelectorAll('.work-card').forEach((card) => {
-    const open = () => openLightbox(parseInt(card.dataset.index, 10));
-    card.addEventListener('click', open);
-    card.addEventListener('keypress', (e) => { if (e.key === 'Enter') open(); });
+    function onStart(e) {
+      if (e.touches.length !== 1) return;
+      drag = {
+        startY: e.touches[0].clientY,
+        startTranslateY: getTranslateY(getComputedStyle(track).transform),
+        trackHeight: track.scrollHeight,
+        duration: parseFloat(track.style.animationDuration) || parseFloat(getComputedStyle(track).animationDuration)
+      };
+      track.style.animationPlayState = 'paused';
+    }
+
+    function onMove(e) {
+      if (!drag || e.touches.length !== 1) return;
+      e.preventDefault();
+      var deltaY = e.touches[0].clientY - drag.startY;
+      var minY = -(drag.trackHeight / 2);
+      var y = Math.max(minY, Math.min(0, drag.startTranslateY + deltaY));
+      track.style.transform = 'translateY(' + y + 'px)';
+    }
+
+    function onEnd() {
+      if (!drag) return;
+      var currentY = track.style.transform ? getTranslateY(track.style.transform) : drag.startTranslateY;
+      var progress = currentY / (-drag.trackHeight / 2);
+      track.style.transform = '';
+      track.style.animationDelay = -(progress * drag.duration) + 's';
+      track.style.animationPlayState = 'running';
+      drag = null;
+    }
+
+    track.addEventListener('touchstart', onStart, { passive: true });
+    track.addEventListener('touchmove', onMove, { passive: false });
+    track.addEventListener('touchend', onEnd, { passive: true });
+    track.addEventListener('touchcancel', onEnd, { passive: true });
   });
 }
+
+function renderWork() {
+  var wrap = document.getElementById('work-grid');
+  if (!wrap || typeof SHOWREEL === 'undefined') return;
+
+  var colCount = getColumnCount();
+  var durations = getColumnDurations(colCount);
+
+  var columns = Array.from({ length: colCount }, function () { return []; });
+  SHOWREEL.forEach(function (v, i) {
+    columns[i % colCount].push({ v: v, index: i });
+  });
+
+  wrap.innerHTML = columns.map(function (col, colIndex) {
+    var duration = durations[colIndex % durations.length];
+    var track = col.concat(col).map(function (c) { return cardMarkup(c.v, c.index); }).join('');
+    return [
+      '<div class="work-marquee-col">',
+      '<div class="work-marquee-track" style="animation-duration:' + duration + 's;">' + track + '</div>',
+      '</div>'
+    ].join('');
+  }).join('');
+
+  wrap.querySelectorAll('.work-card').forEach(function (card) {
+    var open = function () { return openLightbox(parseInt(card.dataset.index, 10)); };
+    card.addEventListener('click', open);
+    card.addEventListener('keypress', function (e) { if (e.key === 'Enter') open(); });
+  });
+
+  setupTouchDrag();
+}
 renderWork();
+
+/* Responsive re-render: listen at both breakpoints */
+(function () {
+  var currentCount = getColumnCount();
+  var mq560 = window.matchMedia('(max-width: 560px)');
+  var mq860 = window.matchMedia('(max-width: 860px)');
+  function handler() {
+    var next = getColumnCount();
+    if (next !== currentCount) {
+      currentCount = next;
+      renderWork();
+    }
+  }
+  mq560.addEventListener('change', handler);
+  mq860.addEventListener('change', handler);
+})();
 
 const lightbox = document.getElementById('lightbox');
 const lightboxVideo = document.getElementById('lightbox-video');
